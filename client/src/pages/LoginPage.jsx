@@ -6,11 +6,10 @@ export default function LoginPage() {
             <div className="-mt-8">
             <h1 className="text-4xl text-center mb-4">Login</h1>
             <form className="max-w-md mx-auto" action="">
-                <input type="email" placeholder="your@email.com" name="" id="" />
-                <input type="password" placeholder="password" name="" id="" />
+                <input type="email" placeholder="your@email.com"  />
+                <input type="password" placeholder="password"  />
                 <button className="primary">Login</button>
-                    <div className="py-1">Don't have an account yet? 
-                        <Link to={'/register'}> Register</Link>
+                    <div className="py-1">Don't have an account yet? <Link className="underline text-black" to={'/register'}>Register</Link>
                     </div>
             </form>
             </div>
