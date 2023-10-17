@@ -3,10 +3,12 @@ const cors = require("cors");
 const express = require("express");
 const { default: mongoose } = require("mongoose");
 const jwt = require("jsonwebtoken");
+const cookieParse = require("cookie-parser");
 
 require("dotenv").config();
 
 const User = require("./models/User");
+const cookieParser = require("cookie-parser");
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = "sadfjsdjfsksfjhlksd";
@@ -14,6 +16,7 @@ const jwtSecret = "sadfjsdjfsksfjhlksd";
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -53,7 +56,7 @@ app.post("/login", async (req, res) => {
         {},
         (err, token) => {
           if (err) throw err;
-          res.cookie("token", token).json("pass ok");
+          res.cookie("token", token).json(userDoc);
         }
       );
     } else {
@@ -61,6 +64,19 @@ app.post("/login", async (req, res) => {
     }
   } else {
     res.json("not found");
+  }
+});
+
+app.get("/profile", (req, res) => {
+  const { token } = req.cookies;
+  if (token) {
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+      if (err) throw err;
+      const { name, email, _id } = await User.findById(userData.id);
+      res.json({ name, email, _id });
+    });
+  } else {
+    res.json(null);
   }
 });
 
