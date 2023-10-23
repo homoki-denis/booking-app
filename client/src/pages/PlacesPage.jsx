@@ -1,7 +1,18 @@
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+
+import Perks from '../Perks';
 
 export default function PlacesPage() {
   const { action } = useParams();
+  const [title, setTitle] = useState('');
+  const [address, setAddress] = useState('');
+  const [photos, setPhotos] = useState([]);
+  const [photoLink, setPhotoLink] = useState('');
+  const [description, setDescription] = useState('');
+  const [perks, setPerks] = useState('');
+  const [extraInfo, setExtraInfo] = useState('');
+  const [guests, setGuests] = useState(1);
 
   return (
     <div>
@@ -33,7 +44,12 @@ export default function PlacesPage() {
         <div>
           <form>
             <h2 className="text-xl mt-4">Title</h2>
-            <input type="text" placeholder="Title, ex: My appartment" />
+            <input
+              type="text"
+              value={title}
+              onChange={(ev) => setTitle(ev.target.value)}
+              placeholder="Title, ex: My appartment"
+            />
             <h2 className="text-xl mt-4">Address</h2>
             <input type="text" placeholder="Address" />
             <h2 className="text-xl mt-4">Photos</h2>
@@ -60,6 +76,30 @@ export default function PlacesPage() {
                   />
                 </svg>
               </button>
+            </div>
+            <h2 className="text-xl mt-4">Description</h2>
+            <textarea />
+            <h2 className="text-xl mt-4">Perks</h2>
+            <Perks selected={perks} onChange={setPerks} />
+            <h2 className="text-xl mt-4">Extra info</h2>
+            <textarea />
+            <h2 className="text-xl mt-4">Check in&out times</h2>
+            <div className="grid sm:grid-cols-3 gap-2">
+              <div className="mt-2 -mb-1">
+                <h3>Check in Time</h3>
+                <input type="text" placeholder="15:00" />
+              </div>
+              <div className="mt-2 -mb-1">
+                <h3>Check out Time</h3>
+                <input type="text" placeholder="21:00" />
+              </div>
+              <div className="mt-2 -mb-1">
+                <h3>Max guests</h3>
+                <input type="text" placeholder="1" />
+              </div>
+            </div>
+            <div>
+              <button className="primary !my-8">Save</button>
             </div>
           </form>
         </div>
