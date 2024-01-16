@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 import Perks from '../Perks';
 
@@ -12,7 +13,22 @@ export default function PlacesPage() {
   const [description, setDescription] = useState('');
   const [perks, setPerks] = useState('');
   const [extraInfo, setExtraInfo] = useState('');
+  const [checkIn, setCheckIn] = useState('');
+  const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState(1);
+
+  const addPhotoByLink = async (ev) => {
+    ev.preventDefault();
+    const { data: filename } = await axios.post('/upload-by-link', {
+      link: photoLink,
+    });
+    setPhotos((prev) => {
+      return [...prev, filename];
+    });
+    setPhotoLink('');
+  };
+
+  console.log(photos);
 
   return (
     <div>
@@ -51,15 +67,31 @@ export default function PlacesPage() {
               placeholder="Title, ex: My appartment"
             />
             <h2 className="text-xl mt-4">Address</h2>
-            <input type="text" placeholder="Address" />
+            <input
+              type="text"
+              placeholder="Address"
+              value={address}
+              onChange={(ev) => setAddress(ev.target.value)}
+            />
             <h2 className="text-xl mt-4">Photos</h2>
             <div className="flex gap-2">
-              <input type="text" placeholder="Add with a link" />
-              <button className="bg-gray-200 px-4 rounded-2xl">
+              <input
+                type="text"
+                placeholder="Add with a link"
+                value={photoLink}
+                onChange={(ev) => setPhotoLink(ev.target.value)}
+              />
+
+              <button
+                onClick={addPhotoByLink}
+                className="bg-gray-200 px-4 rounded-2xl"
+              >
                 Add&nbsp;Photo
               </button>
             </div>
             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 mt-2">
+              {photos.length > 0 &&
+                photos.map((link) => <div key={link}>{link}</div>)}
               <button className="flex justify-center border bg-transparent rounded-2xl p-16 text-2xl">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -78,24 +110,45 @@ export default function PlacesPage() {
               </button>
             </div>
             <h2 className="text-xl mt-4">Description</h2>
-            <textarea />
+            <textarea
+              value={description}
+              onChange={(ev) => setDescription(ev.target.value)}
+            />
             <h2 className="text-xl mt-4">Perks</h2>
             <Perks selected={perks} onChange={setPerks} />
             <h2 className="text-xl mt-4">Extra info</h2>
-            <textarea />
+            <textarea
+              value={extraInfo}
+              onChange={(ev) => setExtraInfo(ev.target.value)}
+            />
             <h2 className="text-xl mt-4">Check in&out times</h2>
             <div className="grid sm:grid-cols-3 gap-2">
               <div className="mt-2 -mb-1">
                 <h3>Check in Time</h3>
-                <input type="text" placeholder="15:00" />
+                <input
+                  type="text"
+                  placeholder="15:00"
+                  value={checkIn}
+                  onChange={(ev) => setCheckIn(ev.target.value)}
+                />
               </div>
               <div className="mt-2 -mb-1">
                 <h3>Check out Time</h3>
-                <input type="text" placeholder="21:00" />
+                <input
+                  type="text"
+                  placeholder="21:00"
+                  value={checkOut}
+                  onChange={(ev) => setCheckOut(ev.target.value)}
+                />
               </div>
               <div className="mt-2 -mb-1">
                 <h3>Max guests</h3>
-                <input type="text" placeholder="1" />
+                <input
+                  type="number"
+                  placeholder="1"
+                  value={guests}
+                  onChange={(ev) => setGuests(ev.value)}
+                />
               </div>
             </div>
             <div>
