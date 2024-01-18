@@ -1,35 +1,13 @@
-import axios from 'axios';
+import { Link, useLocation } from 'react-router-dom';
 
-import { useContext, useState } from 'react';
-import { UserContext } from '../UserContext';
-import { Navigate, Link, useParams } from 'react-router-dom';
-
-import PlacesPage from './PlacesPage';
-
-export default function AccountPage() {
-  const { user, ready, setUser } = useContext(UserContext);
-  const [redirect, setRedirect] = useState(null);
-
-  if (!ready) {
-    return 'Loading...';
-  }
-
-  if (ready && !user && !redirect) {
-    return <Navigate to={'/login'} />;
-  }
-
-  const logout = async () => {
-    await axios.post('/logout');
-    setRedirect('/');
-    setUser(null);
-  };
-
-  let { subpage } = useParams();
-  if (subpage === undefined) {
-    subpage = 'profile';
-  }
-
+export default function AccountNav() {
+  const { pathname } = useLocation();
   const linkedClasses = (type = null) => {
+    let subpage = pathname.split('/')?.[2];
+    if (subpage === undefined) {
+      subpage = 'profile';
+    }
+
     let classes = 'inline-flex gap-1 py-2 px-4 rounded-full';
 
     if (type === subpage) {
@@ -39,13 +17,8 @@ export default function AccountPage() {
     }
     return classes;
   };
-
-  if (redirect) {
-    return <Navigate to={redirect} />;
-  }
-
   return (
-    <div>
+    <>
       <nav className="w-full flex justify-center my-8 gap-2">
         <Link className={linkedClasses('profile')} to={'/account'}>
           <svg
@@ -99,15 +72,6 @@ export default function AccountPage() {
           My accommodations
         </Link>
       </nav>
-      {subpage === 'profile' && (
-        <div className="text-center max-w-lg mx-auto mt-4">
-          Logged in as {user.name} ({user.email}) <br />
-          <button onClick={logout} className="primary max-w-sm !mt-2">
-            Logout
-          </button>
-        </div>
-      )}
-      {subpage === 'places' && <PlacesPage />}
-    </div>
+    </>
   );
 }

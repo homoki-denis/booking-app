@@ -12,6 +12,7 @@ const fs = require("fs");
 require("dotenv").config();
 
 const User = require("./models/User");
+const Place = require("./models/Place");
 const cookieParser = require("cookie-parser");
 
 const bcryptSalt = bcrypt.genSaltSync(10);
@@ -102,6 +103,7 @@ app.post("/upload-by-link", async (req, res) => {
   res.json(newName);
 });
 
+// Add photo
 const photosMiddleware = multer({ dest: "uploads/" });
 app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
   const uploadedFiles = [];
@@ -117,5 +119,47 @@ app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
   res.json(uploadedFiles);
   console.log(uploadedFiles);
 });
+
+app.post("/places", (req, res) => {
+  const { token } = req.cookies;
+  const {
+    title,
+    address,
+    photos,
+    description,
+    perks,
+    extraInfo,
+    checkIn,
+    checkOut,
+    maxGuests,
+  } = req.body;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+    const placeDoc = await Place.create({
+      owner: userData.id,
+      title,
+      address,
+      photos,
+      description,
+      perks,
+      extraInfo,
+      checkIn,
+      checkOut,
+      maxGuests,
+    });
+    res.json(placeDoc);
+  });
+});
+
+// owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+// title: String,
+// address: String,
+// photos: [String],
+// description: String,
+// perks: [String],
+// extraInfo: String,
+// checkIn: Number,
+// checkOut: Number,
+// maxGuests: Number,
 
 app.listen(4000);
