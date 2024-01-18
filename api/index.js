@@ -139,7 +139,7 @@ app.post("/places", (req, res) => {
       owner: userData.id,
       title,
       address,
-      photos,
+      photos: photos,
       description,
       perks,
       extraInfo,
@@ -151,15 +151,12 @@ app.post("/places", (req, res) => {
   });
 });
 
-// owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-// title: String,
-// address: String,
-// photos: [String],
-// description: String,
-// perks: [String],
-// extraInfo: String,
-// checkIn: Number,
-// checkOut: Number,
-// maxGuests: Number,
+app.get("/places", (req, res) => {
+  const { token } = req.cookies;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    const { id } = userData;
+    res.json(await Place.find({ owner: id }));
+  });
+});
 
 app.listen(4000);
