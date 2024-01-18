@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import Perks from '../Perks';
 import PhotosUploader from '../PhotosUploader';
 import AccountNav from '../AccountNav';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 export default function PlacesFormPage() {
+  const { id } = useParams();
   const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
   const [photos, setPhotos] = useState([]);
@@ -18,10 +19,27 @@ export default function PlacesFormPage() {
   const [guests, setGuests] = useState(1);
   const [redirect, setRedirect] = useState(false);
 
-  const addNewPlace = async (ev) => {
-    ev.preventDefault();
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+    axios.get('/places/' + id).then((response) => {
+      const { data } = response;
+      setTitle(data.title);
+      setAddress(data.address);
+      setPhotos(data.photos);
+      setDescription(data.description);
+      setPerks(data.perks);
+      setExtraInfo(data.extraInfo);
+      setCheckIn(data.checkIn);
+      setCheckOut(data.checkOut);
+      setGuests(data.guests);
+    });
+  }, [id]);
 
-    await axios.post('/places', {
+  const savePlace = async (ev) => {
+    ev.preventDefault();
+    const placeData = {
       title,
       address,
       photos,
@@ -31,8 +49,18 @@ export default function PlacesFormPage() {
       checkIn,
       checkOut,
       guests,
-    });
-    setRedirect(true);
+    };
+
+    if (id) {
+      await axios.put('/places', {
+        id,
+        ...placeData,
+      });
+      setRedirect(true);
+    } else {
+      await axios.post('/places', ...placeData);
+      setRedirect(true);
+    }
   };
 
   if (redirect) {
@@ -43,7 +71,7 @@ export default function PlacesFormPage() {
     <>
       <div>
         <AccountNav />
-        <form onSubmit={addNewPlace}>
+        <form onSubmit={savePlace}>
           <h2 className="text-xl mt-4">Title</h2>
           <input
             type="text"

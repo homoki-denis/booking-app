@@ -46,7 +46,13 @@ export default function PlacesPage() {
               className="flex bg-gray-200 p-2 rounded-2xl gap-4 cursor-pointer"
             >
               <div className=" w-32 h-32 bg-gray-300 grow shrink-0">
-                {place.photos.length && <img src={place.photos[0]} alt="" />}
+                {place.photos.length && (
+                  <img
+                    className="object-cover"
+                    src={'http://localhost:4000/uploads/' + place.photos[0]}
+                    alt=""
+                  />
+                )}
               </div>
               <div className="grow shrink-0">
                 <h2 className="text-xl font-bold">{place.title}</h2>
