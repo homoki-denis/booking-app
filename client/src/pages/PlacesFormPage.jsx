@@ -17,6 +17,7 @@ export default function PlacesFormPage() {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState(1);
+  const [price, setPrice] = useState(100);
   const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function PlacesFormPage() {
       setCheckIn(data.checkIn);
       setCheckOut(data.checkOut);
       setGuests(data.guests);
+      setPrice(data.price);
     });
   }, [id]);
 
@@ -49,6 +51,7 @@ export default function PlacesFormPage() {
       checkIn,
       checkOut,
       guests,
+      price,
     };
 
     if (id) {
@@ -128,6 +131,15 @@ export default function PlacesFormPage() {
                 onChange={(ev) => setGuests(ev.value)}
               />
             </div>
+          </div>
+          <div className="mt-2 -mb-1">
+            <h3>Price per night</h3>
+            <input
+              type="number"
+              placeholder="1"
+              value={price}
+              onChange={(ev) => setPrice(ev.target.value)}
+            />
           </div>
           <div>
             <button className="primary !my-8">Save</button>
