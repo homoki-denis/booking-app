@@ -48,7 +48,7 @@ export default function PlacesPage() {
               <div className=" w-32 h-32 bg-gray-300 grow shrink-0">
                 {place.photos.length && (
                   <img
-                    className="object-cover"
+                    className="object-cover w-full h-full"
                     src={'http://localhost:4000/uploads/' + place.photos[0]}
                     alt=""
                   />
