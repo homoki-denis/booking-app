@@ -4,7 +4,7 @@ export default function PlaceGallery({ place }) {
   const [showAllPhotos, setShowAllPhotos] = useState(false);
   if (showAllPhotos) {
     return (
-      <div className="absolute bg-white min-h-screen">
+      <div className="absolute bg-white min-h-screen w-full">
         <div>
           <button
             onClick={() => setShowAllPhotos(false)}
@@ -18,7 +18,7 @@ export default function PlaceGallery({ place }) {
         </div>
         {place?.photos?.length > 0 &&
           place.photos.map((photo) => (
-            <div key={photo} className="w-2/4 pb-2 mx-auto">
+            <div key={photo} className="w-2/4 pb-2 mx-auto ">
               <img src={'http://localhost:4000/uploads' + photo} alt="photo" />
             </div>
           ))}
@@ -27,10 +27,10 @@ export default function PlaceGallery({ place }) {
   }
 
   return (
-    <div className="grid gap-2 grid-cols-[2fr_1fr] max-w-xl relative">
+    <div className="grid gap-2 grid-cols-[2fr_1fr] max-w-xl relative overflow-hidden">
       <div>
         {place.photos?.[0] && (
-          <div className="aspect-square object-cover ">
+          <div className="aspect-square object-cover">
             <img
               src={'http://localhost:4000/uploads/' + place.photos[0]}
               alt=""
